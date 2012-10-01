@@ -19,6 +19,7 @@ namespace Eves
 {
 	/*
 		This handles loading the window
+
 		@param mBar
 			This is the menu bar of Eves. This will contain file, edit, and about.
 		@param w
@@ -52,6 +53,8 @@ namespace Eves
 	
 	/*
 		This loads the taskbar
+		also handles what's on the taskbar
+
 		@param tBar
 			Holds all taskbars data
 		@param w
@@ -66,8 +69,17 @@ namespace Eves
 		gtk_toolbar_set_style(GTK_TOOLBAR(tBar->getTaskbar()), GTK_TOOLBAR_ICONS);
 		gtk_container_set_border_width(GTK_CONTAINER(tBar->getTaskbar()), 2);
 
-		tBar->setPause(gtk_tool_button_new_from_stock(GTK_STOCK_MEDIA_PAUSE));
-		gtk_toolbar_insert(GTK_TOOLBAR(tBar->getTaskbar()), tBar->getPause(), -1);
+		tBar->setPause(gtk_tool_button_new_from_stock(GTK_STOCK_MEDIA_PAUSE));//Pause image
+		tBar->setStart(gtk_tool_button_new_from_stock(GTK_STOCK_NEW));//New image
+		
+
+		gtk_toolbar_insert(GTK_TOOLBAR(tBar->getTaskbar()), tBar->getStart(), -1);//Start simulation
+		
+		//Hrm, not showing the seperator
+		tBar->setSep(gtk_separator_tool_item_new());//Seperator
+		gtk_toolbar_insert(GTK_TOOLBAR(tBar->getTaskbar()), tBar->getSep(), -1);
+
+		gtk_toolbar_insert(GTK_TOOLBAR(tBar->getTaskbar()), tBar->getPause(), -1);//Pause simulation
 
 		gtk_box_pack_start(GTK_BOX(*vbox), tBar->getTaskbar(), FALSE, FALSE, 5);
 	}
@@ -107,6 +119,13 @@ namespace Eves
 		return true;
 	}
 
+	/*
+		Handles the drawing screen
+		@param area
+			The drawing area for Gtk
+		@param App
+			The drawing window for SFML
+	*/
 	void handleScreen(GtkWidget *area, sf::RenderWindow *App)
 	{
 		#ifdef WINDOWS
@@ -115,7 +134,6 @@ namespace Eves
 			App->Create(GDK_WINDOW_XID(area->window));
 		#endif
 		App->SetFramerateLimit(60);
-		//Seg faults here
 		g_signal_connect(area, "expose-event", G_CALLBACK(Eves::on_expose), (void *)App);
 		g_signal_connect(area, "destroy", G_CALLBACK(Eves::on_close), (void *)App);
 	}
