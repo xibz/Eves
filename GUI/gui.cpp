@@ -38,13 +38,29 @@ namespace Eves
 		gtk_container_add(GTK_CONTAINER(*w), *vbox);
 		
 		mBar->setMenuBar(gtk_menu_bar_new());
+
+		//File menu
 		mBar->setFileMenu(gtk_menu_new());
 		mBar->setFile(gtk_menu_item_new_with_label("File"));
+		mBar->setSim(gtk_menu_item_new_with_label("New"));
 		mBar->setQuit(gtk_menu_item_new_with_label("Quit"));
 
+		//Help menu
+		mBar->setHelpMenu(gtk_menu_new());
+		mBar->setHelp(gtk_menu_item_new_with_label("Help"));
+		mBar->setAbout(gtk_menu_item_new_with_label("About"));
+
+		//File menu appending
 		gtk_menu_item_set_submenu(GTK_MENU_ITEM(mBar->getFile()), mBar->getFileMenu());
+		gtk_menu_shell_append(GTK_MENU_SHELL(mBar->getFileMenu()), mBar->getSim());
 		gtk_menu_shell_append(GTK_MENU_SHELL(mBar->getFileMenu()), mBar->getQuit());
 		gtk_menu_shell_append(GTK_MENU_SHELL(mBar->getMenuBar()), mBar->getFile());
+
+		//Help menu appending
+		gtk_menu_item_set_submenu(GTK_MENU_ITEM(mBar->getHelp()), mBar->getHelpMenu());
+		gtk_menu_shell_append(GTK_MENU_SHELL(mBar->getHelpMenu()), mBar->getAbout());
+		gtk_menu_shell_append(GTK_MENU_SHELL(mBar->getMenuBar()), mBar->getHelp());
+
 		gtk_box_pack_start(GTK_BOX(*vbox), mBar->getMenuBar(), FALSE, FALSE, 3);
 
 		g_signal_connect_swapped(G_OBJECT(*w), "destroy", G_CALLBACK(gtk_main_quit), NULL);
@@ -69,10 +85,10 @@ namespace Eves
 		gtk_toolbar_set_style(GTK_TOOLBAR(tBar->getTaskbar()), GTK_TOOLBAR_ICONS);
 		gtk_container_set_border_width(GTK_CONTAINER(tBar->getTaskbar()), 2);
 
+		tBar->setForward(gtk_tool_button_new_from_stock(GTK_STOCK_MEDIA_FORWARD));//Forward image
 		tBar->setPause(gtk_tool_button_new_from_stock(GTK_STOCK_MEDIA_PAUSE));//Pause image
 		tBar->setStart(gtk_tool_button_new_from_stock(GTK_STOCK_NEW));//New image
 		
-
 		gtk_toolbar_insert(GTK_TOOLBAR(tBar->getTaskbar()), tBar->getStart(), -1);//Start simulation
 		
 		//Hrm, not showing the seperator
@@ -80,6 +96,7 @@ namespace Eves
 		gtk_toolbar_insert(GTK_TOOLBAR(tBar->getTaskbar()), tBar->getSep(), -1);
 
 		gtk_toolbar_insert(GTK_TOOLBAR(tBar->getTaskbar()), tBar->getPause(), -1);//Pause simulation
+		gtk_toolbar_insert(GTK_TOOLBAR(tBar->getTaskbar()), tBar->getForward(), -1);//Forward the simulation
 
 		gtk_box_pack_start(GTK_BOX(*vbox), tBar->getTaskbar(), FALSE, FALSE, 5);
 	}
