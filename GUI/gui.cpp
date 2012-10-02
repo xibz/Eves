@@ -10,6 +10,7 @@
 #include <gtk/gtk.h>
 #include <menuBar.h>
 #include <taskBar.h>
+#include <aboutWindow.h>
 #ifdef WINDOWS
 #include <gdk/gdkwin32.h>
 #else
@@ -63,8 +64,10 @@ namespace Eves
 
 		gtk_box_pack_start(GTK_BOX(*vbox), mBar->getMenuBar(), FALSE, FALSE, 3);
 
+		//Callback functions for taskbar
 		g_signal_connect_swapped(G_OBJECT(*w), "destroy", G_CALLBACK(gtk_main_quit), NULL);
 		g_signal_connect_swapped(G_OBJECT(mBar->getQuit()), "activate", G_CALLBACK(gtk_main_quit), NULL);
+		g_signal_connect_swapped(G_OBJECT(mBar->getAbout()), "activate", G_CALLBACK(Eves::showAbout), NULL);
 	}
 	
 	/*
